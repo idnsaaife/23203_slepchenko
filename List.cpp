@@ -23,101 +23,87 @@ bool operator!=(const Value &v1, const Value &v2)
     return !(v1 == v2);
 }
 
-Node::Node(const Node &other) : value(other.value), key(other.key), next(nullptr)
+class Node
 {
-    if (other.next != nullptr)
+public:
+    Node(const Key &name, const Value &data) : key(name), value(data), next(nullptr) {};
+    Node(const Node &other) : key(other.key), value(other.value), next(nullptr)
     {
-        next = new Node(*other.next);
+        if (other.next)
+        {
+            next = new Node(*other.next); 
+        }
     }
-}
-
-Node::Node(Node &&other) : key(std::move(other.key)), value(std::move(other.value)), next(other.next) 
-{
-
-    other.next = nullptr;
-}
-
-Node &Node::operator=(const Node &other)
-{
-    if (this == &other)
+    Node *getNext()
     {
-        return *this;
+        return this->next;
     }
-    key = other.key;
-    value = other.value;
-    if (nullptr != next)
-    {
-        delete next;
-    }
-    if (nullptr == other.next)
-    {
-        next = nullptr;
-        return *this;
-    }
-    next = new Node(*other.next);
-    return *this;
-}
+    void pushAfter(Node *n) { this->next = n; }
+    Value &getValue() { return this->value; }
+    Key &getKey() { return this->key; }
 
-Value &Node::getValue()
-{
-    return value;
-}
-
-Key &Node::getKey()
-{
-    return key;
-}
+private:
+    Key key;
+    Value value;
+    Node *next;
+};
 
 List::List(const List &b) 
 {
-    Node *current = b.first;
-    while (current != nullptr)
+    first = nullptr;
+
+    if (b.first == nullptr)
     {
-        this->push_back(current->key, current->value);
-        current = current->next;
+        return;
     }
+    first = new Node(*b.first);
 }
-List::List(List &&b) : first(std::move(b.first)), last(std::move(b.last)) 
+
+List::~List()
 {
-    while (b.first != nullptr)
+    while (first != nullptr)
     {
-        b.remove_first();
+        removeFirst();
     }
 }
+
+
 
 List &List::operator=(const List &other)
 {
     if (this == &other)
         return *this;
+
     while (first != nullptr)
     {
-        remove_first();
+        removeFirst();
     }
-    Node *current = other.first;
-    while (current != nullptr)
+    if (other.first != nullptr)
     {
-        this->push_back(current->key, current->value);
-        current = current->next;
+        first = new Node(*other.first);
     }
     return *this;
 }
 
-bool List::is_empty()
+bool List::isEmpty()
 {
-    return (first == nullptr);
+    return (nullptr == first);
 }
 
-bool List::push_back(const Key &name, const Value &data)
+bool List::pushBack(const Key &name, const Value &data)
 {
     Node *p = new Node(name, data);
-    if (is_empty())
+    if (isEmpty())
     {
         first = p;
-        last = p;
         return true;
     }
-    last->next = p;
-    last = p;
+    Node *current = first;
+    while (current->getNext() != nullptr)
+    {
+        current = current->getNext();
+    }
+    current->pushAfter(p);
     return true;
 }
 
@@ -126,82 +112,71 @@ bool List::contains(const Key &name)
     Node *p = first;
     while (p != nullptr)
     {
-        if (p->key == name)
+        if (p->getKey() == name)
             return true;
-        p = p->next;
+        p = p->getNext();
     }
     return false;
 }
 
-Node *List::getFirst()
+Value &List::findByKey(const Key &name)
 {
-    return first;
-}
 
-Node *List::find(const Key &name)
-{
     Node *p = first;
     while (p != nullptr)
     {
-        if (p->key == name)
-            return p;
-        p = p->next;
+        if (p->getKey() == name)
+            return p->getValue();
+        p = p->getNext();
     }
-    return nullptr;
+    static Value v;
+    return v;
 }
 
-void List::remove_first()
+void List::removeFirst()
 {
-    if (is_empty())
+    if (isEmpty())
         return;
     Node *p = first;
-    first = p->next;
+    first = p->getNext();
     delete p;
 }
 
-void List::remove_last()
+Value &List::getFirstValue()
 {
-    if (is_empty())
-        return;
-    if (first == last)
-    {
-        remove_first();
-        return;
-    }
-    Node *p = first;
-    while (p->next != last)
-        p = p->next;
-    p->next = nullptr;
-    delete last;
-    last = p;
+    return first->getValue();
+}
+
+Key &List::getFirstKey()
+{
+    return first->getKey();
 }
 
 bool List::remove(const Key &k)
 {
-    if (is_empty())
+    if (isEmpty())
+    {
         return false;
-    if (first->key == k)
-    {
-        remove_first();
-        return true;
     }
-    else if (last->key == k)
+
+    if (first->getKey() == k)
     {
-        remove_last();
+        removeFirst();
         return true;
     }
     Node *slow = first;
-    Node *fast = first->next;
-    while (fast && fast->key != k)
+    Node *fast = first->getNext();
+    while (fast && fast->getKey() != k)
     {
-        fast = fast->next;
-        slow = slow->next;
+        fast = fast->getNext();
+        slow = slow->getNext();
     }
+
     if (fast == nullptr)
     {
         return false;
     }
-    slow->next = fast->next;
+    slow->pushAfter(fast->getNext());
     delete fast;
     return true;
 }
