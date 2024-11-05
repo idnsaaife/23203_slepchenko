@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 
 typedef std::string Key;
@@ -11,40 +12,28 @@ public:
     ~Value() {};
     friend bool operator==(const Value &v1, const Value &v2);
     friend bool operator!=(const Value &v1, const Value &v2);
+    private:
     unsigned age = 0;
     unsigned weight = 0;
 };
 
-struct Node
-{
-public:
-    Node(const Key &name, const Value &data) : key(name), value(data), next(nullptr) {};
-    Node() : key(" "), next(nullptr) {};
-    Node(const Node &other);
-    Node(Node &&other);
-    Node &operator=(const Node &other);
-    Value &getValue();
-    Key &getKey();
-    Key key;
-    Value value;
-    Node *next;
-};
+class Node;
 
-struct List
+class List
 {
+    private:
     Node *first;
-    Node *last;
-    List() : first(nullptr), last(nullptr) {};
+    public:
+    List() : first(nullptr) {};
+    ~List();
     List(const List &b);
-    List(List &&b);
     List &operator=(const List &other);
-    bool is_empty();
-
-    bool push_back(const Key &name, const Value &data);
+    bool isEmpty();
+    bool pushBack(const Key &name, const Value &data);
     bool contains(const Key &name);
-    Node *getFirst();
-    Node *find(const Key &name);
-    void remove_first();
-    void remove_last();
+    Value &findByKey(const Key &name);
+    Key &getFirstKey();
+    Value &getFirstValue();
+    void removeFirst();
     bool remove(const Key &k);
 };
