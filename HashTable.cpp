@@ -1,15 +1,18 @@
 #include "HashTable.hpp"
 #include <iostream>
 
-static int hashFunc(const Key &name, const size_t table_size)
+namespace
 {
-    int hash = 0;
-    size_t size = name.size();
-    for (size_t i = 0; i < size; i++)
+    int hashFunc(const Key &name, const size_t table_size)
     {
-        hash = (hash * 31 + name[i]) % table_size;
+        int hash = 0;
+        size_t size = name.size();
+        for (size_t i = 0; i < size; i++)
+        {
+            hash = (hash * 31 + name[i]) % table_size;
+        }
+        return hash;
     }
-    return hash;
 }
 
 HashTable::HashTable()
@@ -19,36 +22,27 @@ HashTable::HashTable()
 
 HashTable::~HashTable()
 {
-    for (size_t i = 0; i < capacity; i++)
-    {
-        while (arr[i].first != nullptr)
-        {
-            arr[i].List::remove_first();
-        }
-    }
     delete[] arr;
 }
 
-HashTable::HashTable(const HashTable &b) : arr(new List[b.capacity]), curAmount(b.curAmount)
+HashTable::HashTable(const HashTable &b) : capacity(b.capacity), curAmount(b.curAmount), arr(new List[capacity])
 {
-    for (size_t i = 0; i < b.capacity; i++)
-    {
-        arr[i] = b.arr[i];
-    }
+    std::copy(b.arr, b.arr + capacity, arr);
 }
 
-HashTable::HashTable(HashTable &&b) : arr(b.arr), curAmount(b.curAmount)
+HashTable::HashTable(HashTable &&b) : capacity(b.capacity), curAmount(b.curAmount), arr(std::move(b.arr))
 {
-
     b.arr = nullptr;
     b.curAmount = 0;
+    b.capacity = 0;
 }
 
 void HashTable::swap(HashTable &b)
 {
-    HashTable temp(*this);
-    *this = b;
-    b = temp;
+
+    std::swap(capacity, b.capacity);
+    std::swap(curAmount, b.curAmount);
+    std::swap(arr, b.arr);
 }
 
 HashTable &HashTable::operator=(const HashTable &b)
@@ -57,168 +51,161 @@ HashTable &HashTable::operator=(const HashTable &b)
         return *this;
     delete[] arr;
     curAmount = b.curAmount;
+    capacity = b.capacity;
     arr = new List[b.capacity];
-    for (size_t i = 0; i < b.capacity; i++)
-    {
-        arr[i] = b.arr[i];
-    }
+    std::copy(b.arr, b.arr + capacity, arr);
     return *this;
 }
 
+HashTable &HashTable::operator=(HashTable &&b)
+{
+    if (this == &b)
+        return *this;
+    delete[] arr;
+    curAmount = b.curAmount;
+    capacity = b.capacity;
+    arr = new List[b.capacity];
+    arr = b.arr;
+    b.arr = nullptr;
+    b.curAmount = 0;
+    b.capacity = 0;
+    return *this;
+}
 
 void HashTable::clear()
 {
     size_t i = 0;
     while (i < capacity)
     {
-        if (!(arr[i].is_empty()))
+        while (!arr[i].isEmpty())
         {
-            while (arr[i].first != nullptr)
-            {
-                arr[i].List::remove_first();
-            }
+            arr[i].removeFirst();
         }
         i++;
     }
     curAmount = 0;
-};
+    capacity = INIT_CAPACITY;
+}
 
 bool HashTable::erase(const Key &k)
 {
-    size_t hash = hashFunc(k, this->capacity);
-    size_t i = 0;
-    List list = arr[hash];
-    while (i < curAmount)
+    size_t hash = hashFunc(k, capacity);
+
+    if (!arr[hash].remove(k))
+        return false;
+
+    curAmount--;
+    return true;
+}
+
+void HashTable::rehash()
+{
+
+    size_t old_capacity = capacity;
+    capacity *= 2;
+    List *newArr = new List[capacity];
+    for (size_t i = 0; i < old_capacity; i++)
     {
-        if (arr[hash].List::is_empty())
-            return false;
-
-        if (arr[hash].List::remove(k))
+        while (!arr[i].isEmpty())
         {
-            curAmount--;
-            return true;
+            size_t newHash = hashFunc(arr[i].getFirstKey(), capacity);
+            newArr[newHash].pushBack(arr[i].getFirstKey(), arr[i].getFirstValue());
+            arr[i].removeFirst();
         }
-        i++;
     }
-
-    return false;
-};
+    arr = newArr;
+}
 
 bool HashTable::insert(const Key &k, const Value &v)
 {
-    size_t hash = hashFunc(k, this->capacity);
-    Node *temp = arr[hash].List::find(k);
-    if ((nullptr != temp) && (v != temp->Node::getValue()))
+    if (capacity * MAX_LOAD_FACTOR < curAmount)
+    {
+        rehash();
+    }
+    size_t hash = hashFunc(k, capacity);
+    if (arr[hash].contains(k))
     {
         return false;
     }
-    if (nullptr != temp && v == temp->Node::getValue())
-    {
-        return false;
-    }
-    arr[hash].List::push_back(k, v);
+    arr[hash].pushBack(k, v);
     curAmount += 1;
     return true;
-};
+}
 
 bool HashTable::contains(const Key &k) const
 {
-    size_t hash = hashFunc(k, this->capacity);
-    return arr[hash].List::contains(k);
-};
+    size_t hash = hashFunc(k, capacity);
+    if (arr == nullptr)
+        return false;
+    return arr[hash].contains(k);
+}
 
 Value &HashTable::operator[](const Key &k)
 {
-    size_t hash = hashFunc(k, this->capacity);
-    Value v;
-    insert(k, v);
-    return (arr[hash].List::find(k)->Node::getValue());
-};
+    for (size_t i = 0; i < capacity; i++)
+    {
 
-Value &HashTable::at(const Key &k)
-{
-    size_t hash = hashFunc(k, this->capacity);
-    Node *place = arr[hash].List::find(k);
-    if (place == nullptr)
-        throw std::runtime_error("key" + k + "doesn't exist");
-    return place->Node::getValue();
-};
+        if (arr[i].contains(k))
+            return (arr[i].findByKey(k));
+    }
+    insert(k, {});
+    return arr[hashFunc(k, capacity)].findByKey(k);
+}
 
 const Value &HashTable::at(const Key &k) const
 {
-    size_t hash = hashFunc(k, this->capacity);
-    Node *place = arr[hash].find(k);
-    if (place == nullptr)
-        throw std::runtime_error("key" + k + "doesn't exist");
-    return place->getValue();
+    for (size_t i = 0; i < capacity; i++)
+    {
+        if (arr[i].contains(k))
+            return (arr[i].findByKey(k));
+    }
+    throw std::runtime_error("key " + k + " doesn't exist");
+}
+
+Value &HashTable::at(const Key &k)
+{
+    return const_cast<Value &>(static_cast<const HashTable &>(*this).at(k)); 
 }
 
 size_t HashTable::size() const
 {
     return capacity;
-};
+}
 
 size_t HashTable::amount() const
 {
     return curAmount;
-};
+}
 
 bool HashTable::empty() const
 {
     return (curAmount == 0);
-};
+}
 
-bool operator==(const HashTable &a, const HashTable &b)
+bool operator==(const HashTable &a, const HashTable &b) 
 {
-    bool flag = false;
+    if (a.curAmount != b.curAmount)
+        return false;
     for (size_t i = 0; i < a.capacity; i++)
     {
-        Node* tempA = a.arr[i].first;
-        while (nullptr != tempA)
+        List tempA(a.arr[i]);
+        while (!tempA.isEmpty())
         {
-            for (size_t j = 0; j < b.capacity; j++)
-            {
-                Node *tempB = b.arr[j].find(tempA->getKey());
-                if (nullptr != tempB && tempB->getValue() == tempA->getValue())
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            if (false == flag)
+            if (!b.contains(tempA.getFirstKey()))
             {
                 return false;
             }
-            flag = false;
-            tempA = tempA->next;
-        }
-    }
-    for (size_t i = 0; i < b.capacity; i++)
-    {
-        Node *tempB = b.arr[i].first;
-        while (nullptr != tempB)
-        {
-            for (size_t j = 0; j < a.capacity; j++)
-            {
-                Node *tempA = a.arr[j].find(tempB->getKey());
-                if (nullptr != tempA && tempA->getValue() == tempB->getValue())
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            if (false == flag)
+            if (b.at(tempA.getFirstKey()) != tempA.getFirstValue())
             {
                 return false;
             }
-            flag = false;
-            tempB = tempB->next;
+            tempA.removeFirst();
         }
     }
     return true;
-};
+}
 
 bool operator!=(const HashTable &a, const HashTable &b)
 {
     return !(a == b);
-};
+}
