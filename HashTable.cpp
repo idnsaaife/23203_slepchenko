@@ -49,7 +49,7 @@ HashTable &HashTable::operator=(const HashTable &other) {
   return *this;
 }
 
-HashTable &HashTable::operator=(HashTable &&other) noexcept {
+HashTable &HashTable::operator=(HashTable &&other) {
   if (this == &other) {
     return *this;
   }
