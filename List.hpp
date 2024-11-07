@@ -34,10 +34,10 @@ private:
 public:
   List() = default;
   ~List();
-  List(const List &b) noexcept;
+  List(const List &b);
   List(List &&b) = delete;
 
-  List &operator=(const List &other) noexcept;
+  List &operator=(const List &other);
   List &operator=(List &&other) = delete;
 
   void pushBack(const Key &name, const Value &data);
