@@ -38,7 +38,7 @@ public:
   assigns values to the container
   */
   HashTable &operator=(const HashTable &other);
-  HashTable &operator=(HashTable &&other) noexcept;
+  HashTable &operator=(HashTable &&other);
   /*
   clears the contents
   */
