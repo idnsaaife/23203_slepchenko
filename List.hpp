@@ -1,39 +1,52 @@
 #pragma once
 #include <iostream>
 
-typedef std::string Key;
+using Key = std::string;
 
-struct Value
-{
+class Value {
 public:
-    Value(const unsigned &a, const unsigned &w) : age(a), weight(w) {};
-    Value(const Value &other);
-    Value() {};
-    ~Value() {};
-    friend bool operator==(const Value &v1, const Value &v2);
-    friend bool operator!=(const Value &v1, const Value &v2);
-    private:
-    unsigned age = 0;
-    unsigned weight = 0;
+  Value(const unsigned &a, const unsigned &w) : age(a), weight(w) {};
+  Value(const Value &other);
+  Value() = default;
+  ~Value() = default;
+  friend bool operator==(const Value &v1, const Value &v2);
+  friend bool operator!=(const Value &v1, const Value &v2);
+
+private:
+  unsigned age = 0;
+  unsigned weight = 0;
 };
 
-class Node;
+class List {
+private:
+  struct Node {
+    Node(const Key &name, const Value &data) : key(name), value(data) {}
+    Node(const Node &other) = delete;
+    Node(Node &&other) = delete;
+    Node &operator=(const Node &other) = delete;
+    Node &operator=(Node &&other) = delete;
+    Key key;
+    Value value;
+    Node *next = nullptr;
+  };
+  Node *first = nullptr;
 
-class List
-{
-    private:
-    Node *first;
-    public:
-    List() : first(nullptr) {};
-    ~List();
-    List(const List &b);
-    List &operator=(const List &other);
-    bool isEmpty();
-    bool pushBack(const Key &name, const Value &data);
-    bool contains(const Key &name);
-    Value &findByKey(const Key &name);
-    Key &getFirstKey();
-    Value &getFirstValue();
-    void removeFirst();
-    bool remove(const Key &k);
+public:
+  List() = default;
+  ~List();
+  List(const List &b) noexcept;
+  List(List &&b) = delete;
+
+  List &operator=(const List &other) noexcept;
+  List &operator=(List &&other) = delete;
+
+  void pushBack(const Key &name, const Value &data);
+  bool contains(const Key &name) const;
+  void clear();
+  bool isEmpty() const;
+  const Value &findByKey(const Key &name) const;
+  const Key &getFirstKey() const;
+  const Value &getFirstValue() const;
+  void removeFirst();
+  bool remove(const Key &k);
 };
