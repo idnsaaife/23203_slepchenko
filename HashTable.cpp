@@ -41,7 +41,7 @@ HashTable &HashTable::operator=(const HashTable &other) {
   if (this == &other) {
     return *this;
   }
-  // delete[] arr;
+  delete[] arr;
   curAmount = other.curAmount;
   capacity = other.capacity;
   arr = new List[other.capacity];
