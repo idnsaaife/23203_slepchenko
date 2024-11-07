@@ -29,7 +29,7 @@ public:
   Creates new HashTable object by moving another HashTable object to this one
   b is the HashTable to move
   */
-  HashTable(HashTable &&other);
+  HashTable(HashTable &&other) noexcept;
   /*
   swap two HashTable objects
   */
