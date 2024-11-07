@@ -13,7 +13,7 @@ bool operator==(const Value &v1, const Value &v2) {
 
 bool operator!=(const Value &v1, const Value &v2) { return !(v1 == v2); }
 
-List::List(const List &b) noexcept {
+List::List(const List &b) {
   Node *current = b.first;
   while (current) {
     pushBack(current->key, current->value);
@@ -23,7 +23,7 @@ List::List(const List &b) noexcept {
 
 List::~List() { clear(); }
 
-List &List::operator=(const List &other) noexcept {
+List &List::operator=(const List &other) {
   if (this == &other) {
     return *this;
   }
