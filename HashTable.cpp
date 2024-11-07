@@ -23,7 +23,7 @@ HashTable::HashTable(const HashTable &other)
   std::copy(other.arr, other.arr + capacity, arr);
 }
 
-HashTable::HashTable(HashTable &&other)
+HashTable::HashTable(HashTable &&other) noexcept
     : capacity(other.capacity), curAmount(other.curAmount), arr(other.arr) {
   other.arr = nullptr;
   other.curAmount = 0;
@@ -49,7 +49,7 @@ HashTable &HashTable::operator=(const HashTable &other) {
   return *this;
 }
 
-HashTable &HashTable::operator=(HashTable &&other) {
+HashTable &HashTable::operator=(HashTable &&other) noexcept {
   if (this == &other) {
     return *this;
   }
