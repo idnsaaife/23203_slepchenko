@@ -1,0 +1,7 @@
+{
+    "name": "CautiousStrategy",
+    "maxScore": 16,
+    "riskTolerance": 0.1,
+    "opponentHighCardImpact": 1.0,
+    "expectedOpponentScore": 8
+}
