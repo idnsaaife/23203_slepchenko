@@ -1,0 +1,7 @@
+{
+    "name": "RiskyStrategy",
+    "maxScore": 18,
+    "riskTolerance": 0.6,
+    "opponentHighCardImpact": 0.4,
+    "expectedOpponentScore": 9
+}

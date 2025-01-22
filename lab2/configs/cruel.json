@@ -1,0 +1,7 @@
+{
+    "name": "CruelStrategy",
+    "maxScore": 19,
+    "riskTolerance": 0.9,
+    "opponentHighCardImpact": 0.1,
+    "expectedOpponentScore": 11
+}
