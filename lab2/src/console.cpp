@@ -14,7 +14,7 @@ bool Console::waitQuit()
     std::cout << "Press ENTER to continue, type quit to end the match" << std::endl;
     std::string str;
     std::getline(std::cin, str);
-    return (str != "quit")
+    return (str != "quit");
 }
 
 void Console::printHelp()
