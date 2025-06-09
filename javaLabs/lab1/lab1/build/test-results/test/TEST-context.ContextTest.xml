@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="context.ContextTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2025-04-30T05:47:17.011Z" hostname="MacBook-Air-sofya-2.local" time="0.017">
+  <properties/>
+  <testcase name="testDecrementPointerWithinBounds()" classname="context.ContextTest" time="0.001"/>
+  <testcase name="testModifyValueAtDifferentPositions()" classname="context.ContextTest" time="0.001"/>
+  <testcase name="testDecrementPointerOutOfBounds()" classname="context.ContextTest" time="0.001"/>
+  <testcase name="testIncrementPointerOutOfBounds()" classname="context.ContextTest" time="0.004"/>
+  <testcase name="testIncrementValue()" classname="context.ContextTest" time="0.001"/>
+  <testcase name="testIncrementPointerWithinBounds()" classname="context.ContextTest" time="0.001"/>
+  <testcase name="testDecrementValue()" classname="context.ContextTest" time="0.001"/>
+  <testcase name="testSetValue()" classname="context.ContextTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

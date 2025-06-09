@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="util.InputManagerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-04-30T05:48:11.091Z" hostname="MacBook-Air-sofya-2.local" time="0.019">
+  <properties/>
+  <testcase name="testInputManagerFileArg()" classname="util.InputManagerTest" time="0.01"/>
+  <testcase name="testInputManagerEmptyArgs()" classname="util.InputManagerTest" time="0.001"/>
+  <testcase name="testInputManagerCodeArg()" classname="util.InputManagerTest" time="0.004"/>
+  <testcase name="testInputManagerInvalidArg()" classname="util.InputManagerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

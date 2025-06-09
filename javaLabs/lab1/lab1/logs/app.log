@@ -1,0 +1,3 @@
+2025-04-30 12:47:17 [Test worker] TRACE nsu.slepchenko.interpreter.BrainfuckInterpreter - java.lang.IllegalArgumentException: Unmatched brackets. Not enough ]
+2025-04-30 12:47:37 [Test worker] TRACE nsu.slepchenko.interpreter.BrainfuckInterpreter - java.lang.RuntimeException: Execution time exceeded limit at position 6
+2025-04-30 12:48:11 [Test worker] INFO  nsu.slepchenko.interpreter.BrainfuckInterpreter - Execution time exceeded limit

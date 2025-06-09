@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="commands.CommandFactoryTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-04-30T05:47:16.949Z" hostname="MacBook-Air-sofya-2.local" time="0.039">
+  <properties/>
+  <testcase name="testInput()" classname="commands.CommandFactoryTest" time="0.002"/>
+  <testcase name="testIncrement()" classname="commands.CommandFactoryTest" time="0.003"/>
+  <testcase name="testLoopEnd()" classname="commands.CommandFactoryTest" time="0.001"/>
+  <testcase name="testCreatingCommandForUnknownName()" classname="commands.CommandFactoryTest" time="0.012"/>
+  <testcase name="testMoveLeft()" classname="commands.CommandFactoryTest" time="0.001"/>
+  <testcase name="testDecrement()" classname="commands.CommandFactoryTest" time="0.0"/>
+  <testcase name="testOutput()" classname="commands.CommandFactoryTest" time="0.003"/>
+  <testcase name="testMoveRight()" classname="commands.CommandFactoryTest" time="0.001"/>
+  <testcase name="testLoopStart()" classname="commands.CommandFactoryTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="commands.InputTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-04-30T05:47:16.864Z" hostname="MacBook-Air-sofya-2.local" time="0.01">
+  <properties/>
+  <testcase name="testMultipleCharactersInput()" classname="commands.InputTest" time="0.004"/>
+  <testcase name="testSingleCharacterInput()" classname="commands.InputTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
