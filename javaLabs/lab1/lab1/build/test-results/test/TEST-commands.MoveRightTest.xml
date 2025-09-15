@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="commands.MoveRightTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-04-30T05:47:16.901Z" hostname="MacBook-Air-sofya-2.local" time="0.025">
-  <properties/>
-  <testcase name="testSimpleMoveRight()" classname="commands.MoveRightTest" time="0.006"/>
-  <testcase name="testPointerOutOfBounds()" classname="commands.MoveRightTest" time="0.007"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
